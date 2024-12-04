@@ -1,16 +1,27 @@
 import { SignupInput} from "common-medium-pavan";
 import { ChangeEvent, useState } from "react";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import {BACKEND_URL}from "../Config"
 
  export const Auth=({type} :{ type :"SignUp" | "SignIn"} ) => {
+    const navigate= useNavigate()
     const [PostInputs , setPostInputs]= useState <SignupInput>({
         name : "",
         username : "",
         password : ""
     });
 
-     function sendRequest (){
-
+    async function sendRequest (){
+        try {
+          const responce =  await axios.post(`${BACKEND_URL}/api/v1/user/${type === "SignUp" ? "signup" : "SignIn"}`, PostInputs);
+            const jwt = responce.data;
+            localStorage.setItem("token" , jwt);
+            navigate("/blogs")
+        } catch (error) {
+            alert("Error while signing up" + error)
+        }
+     
      }
     return <div className="h-screen flex justify-center flex-col">
     <div className=" flex justify-center">
@@ -44,10 +55,10 @@ import { Link } from "react-router-dom"
     <LabeledInput  label="Password"  type= "password" placeholder="*******" onchange={(e)=>{
         setPostInputs({
             ...PostInputs,
-            username:e.target.value
+            password:e.target.value
         })
     }}/>
- <button type="button" 
+ <button type="button" onClick={sendRequest}
  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 w-full mt-3">
     {type== "SignUp" ? "SignUp" : "SignIn"}</button>
 

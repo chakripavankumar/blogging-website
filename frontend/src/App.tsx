@@ -9,7 +9,7 @@ export default function App() {
     <Routes>
       <Route path="/signup" element={<SignUp/>}/>
       <Route path="/signin" element={<SignIn/>}/>
-      <Route path="/blog" element= {<Blog/>}/>
+      <Route path="/blogs" element= {<Blog/>}/>
     </Routes>
     </BrowserRouter>
   )
